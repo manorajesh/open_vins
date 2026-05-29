@@ -72,7 +72,7 @@ list(APPEND LIBRARY_SOURCES
         src/sim/SimulatorInit.cpp
 )
 file(GLOB_RECURSE LIBRARY_HEADERS "src/*.h")
-add_library(ov_init_lib SHARED ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
+add_library(ov_init_lib ${OPENVINS_LIBRARY_TYPE} ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
 target_link_libraries(ov_init_lib ${thirdparty_libraries})
 target_include_directories(ov_init_lib PUBLIC src/)
 install(TARGETS ov_init_lib
@@ -121,5 +121,4 @@ install(TARGETS test_dynamic_init
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-
 

@@ -92,7 +92,7 @@ if (catkin_FOUND AND ENABLE_ROS)
     list(APPEND LIBRARY_SOURCES src/ros/ROS1Visualizer.cpp src/ros/ROSVisualizerHelper.cpp)
 endif ()
 file(GLOB_RECURSE LIBRARY_HEADERS "src/*.h")
-add_library(ov_msckf_lib SHARED ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
+add_library(ov_msckf_lib ${OPENVINS_LIBRARY_TYPE} ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
 target_link_libraries(ov_msckf_lib ${thirdparty_libraries})
 target_include_directories(ov_msckf_lib PUBLIC src/)
 install(TARGETS ov_msckf_lib
@@ -134,27 +134,30 @@ if (catkin_FOUND AND ENABLE_ROS)
 
 endif ()
 
-add_executable(run_simulation src/run_simulation.cpp)
-target_link_libraries(run_simulation ov_msckf_lib ${thirdparty_libraries})
-install(TARGETS run_simulation
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+if (BUILD_OPENVINS_TOOLS)
 
-add_executable(test_sim_meas src/test_sim_meas.cpp)
-target_link_libraries(test_sim_meas ov_msckf_lib ${thirdparty_libraries})
-install(TARGETS test_sim_meas
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+    add_executable(run_simulation src/run_simulation.cpp)
+    target_link_libraries(run_simulation ov_msckf_lib ${thirdparty_libraries})
+    install(TARGETS run_simulation
+            ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+            LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+            RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    )
 
-add_executable(test_sim_repeat src/test_sim_repeat.cpp)
-target_link_libraries(test_sim_repeat ov_msckf_lib ${thirdparty_libraries})
-install(TARGETS test_sim_repeat
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+    add_executable(test_sim_meas src/test_sim_meas.cpp)
+    target_link_libraries(test_sim_meas ov_msckf_lib ${thirdparty_libraries})
+    install(TARGETS test_sim_meas
+            ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+            LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+            RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    )
 
+    add_executable(test_sim_repeat src/test_sim_repeat.cpp)
+    target_link_libraries(test_sim_repeat ov_msckf_lib ${thirdparty_libraries})
+    install(TARGETS test_sim_repeat
+            ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+            LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+            RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    )
+
+endif ()

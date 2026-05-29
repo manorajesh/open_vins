@@ -56,7 +56,7 @@ list(APPEND LIBRARY_SOURCES
         src/utils/print.cpp
 )
 file(GLOB_RECURSE LIBRARY_HEADERS "src/*.h")
-add_library(ov_core_lib SHARED ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
+add_library(ov_core_lib ${OPENVINS_LIBRARY_TYPE} ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
 target_link_libraries(ov_core_lib ${thirdparty_libraries})
 target_include_directories(ov_core_lib PUBLIC src/)
 install(TARGETS ov_core_lib
@@ -100,6 +100,5 @@ install(TARGETS test_profile
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-
 
 

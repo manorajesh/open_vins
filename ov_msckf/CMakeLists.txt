@@ -8,12 +8,14 @@ find_package(OpenCV 3 QUIET)
 if (NOT OpenCV_FOUND)
     find_package(OpenCV 4 REQUIRED)
 endif ()
-find_package(Boost REQUIRED COMPONENTS system filesystem thread date_time)
+find_package(Boost REQUIRED COMPONENTS filesystem thread date_time)
 find_package(Ceres REQUIRED)
 message(STATUS "OPENCV: " ${OpenCV_VERSION} " | BOOST: " ${Boost_VERSION} " | CERES: " ${Ceres_VERSION})
 
 # By default we build with ROS, but you can disable this and just build as a library
 option(ENABLE_ROS "Enable or disable building with ROS (if it is found)" ON)
+option(BUILD_OPENVINS_TOOLS "Enable or disable building OpenVINS simulation/test executables" ON)
+set(OPENVINS_LIBRARY_TYPE "SHARED" CACHE STRING "OpenVINS library type")
 
 # If we will compile with aruco support
 option(ENABLE_ARUCO_TAGS "Enable or disable aruco tag (disable if no contrib modules)" ON)
@@ -51,6 +53,3 @@ else ()
     message(STATUS "No ROS versions found or building with ROS disabled, building ROS1.cmake without ROS")
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/ROS1.cmake)
 endif ()
-
-
-
