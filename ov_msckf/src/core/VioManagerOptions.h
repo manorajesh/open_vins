@@ -285,11 +285,13 @@ struct VioManagerOptions {
           std::string mask_node = "mask" + std::to_string(i);
           parser->parse_config(mask_node, mask_path);
           std::string total_mask_path = parser->get_config_folder() + mask_path;
+#ifndef OPENVINS_DISABLE_FILE_OUTPUT
           if (!boost::filesystem::exists(total_mask_path)) {
             PRINT_ERROR(RED "VioManager(): invalid mask path:\n" RESET);
             PRINT_ERROR(RED "\t- mask%d - %s\n" RESET, i, total_mask_path.c_str());
             std::exit(EXIT_FAILURE);
           }
+#endif
           cv::Mat mask = cv::imread(total_mask_path, cv::IMREAD_GRAYSCALE);
           masks.insert({i, mask});
           if (mask.cols != camera_intrinsics.at(i)->w() || mask.rows != camera_intrinsics.at(i)->h()) {

@@ -103,6 +103,9 @@ VioManager::VioManager(VioManagerOptions &params_) : thread_init_running(false),
 
   // If we are recording statistics, then open our file
   if (params.record_timing_information) {
+#ifdef OPENVINS_DISABLE_FILE_OUTPUT
+    PRINT_WARNING(YELLOW "[STATS]: file output disabled in this build\n" RESET);
+#else
     // If the file exists, then delete it
     if (boost::filesystem::exists(params.record_timing_filepath)) {
       boost::filesystem::remove(params.record_timing_filepath);
@@ -119,6 +122,7 @@ VioManager::VioManager(VioManagerOptions &params_) : thread_init_running(false),
       of_statistics << "slam update,slam delayed,";
     }
     of_statistics << "re-tri & marg,total" << std::endl;
+#endif
   }
 
   //===================================================================================

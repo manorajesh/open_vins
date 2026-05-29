@@ -62,6 +62,10 @@ if (NOT catkin_FOUND OR NOT ENABLE_ROS)
     list(FILTER OVINIT_LIBRARY_SOURCES EXCLUDE REGEX ".*test_dynamic_mle\\.cpp$")
     list(FILTER OVINIT_LIBRARY_SOURCES EXCLUDE REGEX ".*test_simulation\\.cpp$")
     list(FILTER OVINIT_LIBRARY_SOURCES EXCLUDE REGEX ".*Simulator\\.cpp$")
+    if (OPENVINS_DISABLE_DYNAMIC_INITIALIZER)
+        list(FILTER OVINIT_LIBRARY_SOURCES EXCLUDE REGEX ".*/dynamic/.*\\.cpp$")
+        list(FILTER OVINIT_LIBRARY_SOURCES EXCLUDE REGEX ".*/ceres/.*\\.cpp$")
+    endif ()
     list(APPEND LIBRARY_SOURCES ${OVINIT_LIBRARY_SOURCES})
     include_directories(${CMAKE_SOURCE_DIR}/../ov_init/src/)
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/../ov_init/src/
@@ -77,7 +81,6 @@ endif ()
 
 list(APPEND LIBRARY_SOURCES
         src/dummy.cpp
-        src/sim/Simulator.cpp
         src/state/State.cpp
         src/state/StateHelper.cpp
         src/state/Propagator.cpp
@@ -88,6 +91,9 @@ list(APPEND LIBRARY_SOURCES
         src/update/UpdaterSLAM.cpp
         src/update/UpdaterZeroVelocity.cpp
 )
+if (BUILD_OPENVINS_SIMULATION)
+    list(APPEND LIBRARY_SOURCES src/sim/Simulator.cpp)
+endif ()
 if (catkin_FOUND AND ENABLE_ROS)
     list(APPEND LIBRARY_SOURCES src/ros/ROS1Visualizer.cpp src/ros/ROSVisualizerHelper.cpp)
 endif ()

@@ -21,7 +21,7 @@
 
 #include "InertialInitializer.h"
 
-#ifndef __ANDROID__
+#if !defined(__ANDROID__) && !defined(OPENVINS_DISABLE_DYNAMIC_INITIALIZER)
 #include "dynamic/DynamicInitializer.h"
 #endif
 #include "static/StaticInitializer.h"
@@ -45,7 +45,7 @@ InertialInitializer::InertialInitializer(InertialInitializerOptions &params_, st
 
   // Create initializers
   init_static = std::make_shared<StaticInitializer>(params, _db, imu_data);
-#ifndef __ANDROID__
+#if !defined(__ANDROID__) && !defined(OPENVINS_DISABLE_DYNAMIC_INITIALIZER)
   init_dynamic = std::make_shared<DynamicInitializer>(params, _db, imu_data);
 #else
   init_dynamic = nullptr;
@@ -139,7 +139,7 @@ bool InertialInitializer::initialize(double &timestamp, Eigen::MatrixXd &covaria
     PRINT_DEBUG(GREEN "[init]: USING STATIC INITIALIZER METHOD!\n" RESET);
     return init_static->initialize(timestamp, covariance, order, t_imu, wait_for_jerk);
   } else if (params.init_dyn_use && !is_still) {
-#ifndef __ANDROID__
+#if !defined(__ANDROID__) && !defined(OPENVINS_DISABLE_DYNAMIC_INITIALIZER)
     PRINT_DEBUG(GREEN "[init]: USING DYNAMIC INITIALIZER METHOD!\n" RESET);
     std::map<double, std::shared_ptr<ov_type::PoseJPL>> _clones_IMU;
     std::unordered_map<size_t, std::shared_ptr<ov_type::Landmark>> _features_SLAM;
@@ -147,7 +147,7 @@ bool InertialInitializer::initialize(double &timestamp, Eigen::MatrixXd &covaria
       return init_dynamic->initialize(timestamp, covariance, order, t_imu, _clones_IMU, _features_SLAM);
     }
 #else
-    PRINT_ERROR(RED "[init]: DYNAMIC INITIALIZER not available on Android (Ceres Solver not included)\n" RESET);
+    PRINT_ERROR(RED "[init]: DYNAMIC INITIALIZER not available in this build\n" RESET);
 #endif
   } else {
     std::string msg = (has_jerk) ? "" : "no accel jerk detected";
