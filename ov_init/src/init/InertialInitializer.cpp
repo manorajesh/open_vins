@@ -105,7 +105,7 @@ bool InertialInitializer::initialize(double &timestamp, Eigen::MatrixXd &covaria
   // If disparity is zero or negative we will always use the static initializer
   bool disparity_detected_moving_1to0 = false;
   bool disparity_detected_moving_2to1 = false;
-  if (params.init_max_disparity > 0) {
+  if (params.init_static_use_disparity && params.init_max_disparity > 0) {
 
     // Get the disparity statistics from this image to the previous
     // Only compute the disparity for the oldest half of the initialization period

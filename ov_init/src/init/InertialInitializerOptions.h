@@ -69,6 +69,9 @@ struct InertialInitializerOptions {
   /// Max disparity we will consider the unit to be stationary
   double init_max_disparity = 1.0;
 
+  /// If visual disparity should be used to decide whether the static initializer can run
+  bool init_static_use_disparity = true;
+
   /// Number of features we should try to track
   int init_max_features = 50;
 
@@ -127,6 +130,7 @@ struct InertialInitializerOptions {
       parser->parse_config("init_window_time", init_window_time);
       parser->parse_config("init_imu_thresh", init_imu_thresh);
       parser->parse_config("init_max_disparity", init_max_disparity);
+      parser->parse_config("init_static_use_disparity", init_static_use_disparity);
       parser->parse_config("init_max_features", init_max_features);
       parser->parse_config("init_dyn_use", init_dyn_use);
       parser->parse_config("init_dyn_mle_opt_calib", init_dyn_mle_opt_calib);
@@ -162,12 +166,13 @@ struct InertialInitializerOptions {
       PRINT_ERROR(RED "  init_dyn_use = %d\n" RESET, init_dyn_use);
       std::exit(EXIT_FAILURE);
     }
-    if (init_max_disparity <= 0.0 && !init_dyn_use) {
+    if (init_static_use_disparity && init_max_disparity <= 0.0 && !init_dyn_use) {
       PRINT_ERROR(RED "need to have an DISPARITY threshold for static initialization!\n" RESET);
       PRINT_ERROR(RED "  init_max_disparity = %.3f\n" RESET, init_max_disparity);
       PRINT_ERROR(RED "  init_dyn_use = %d\n" RESET, init_dyn_use);
       std::exit(EXIT_FAILURE);
     }
+    PRINT_DEBUG("  - init_static_use_disparity: %d\n", init_static_use_disparity);
     PRINT_DEBUG("  - init_dyn_use: %d\n", init_dyn_use);
     PRINT_DEBUG("  - init_dyn_mle_opt_calib: %d\n", init_dyn_mle_opt_calib);
     PRINT_DEBUG("  - init_dyn_mle_max_iter: %d\n", init_dyn_mle_max_iter);
